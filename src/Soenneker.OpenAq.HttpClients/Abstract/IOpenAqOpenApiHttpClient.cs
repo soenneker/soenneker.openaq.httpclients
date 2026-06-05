@@ -10,5 +10,10 @@ namespace Soenneker.OpenAq.HttpClients.Abstract;
 /// </summary>
 public interface IOpenAqOpenApiHttpClient: IDisposable, IAsyncDisposable
 {
+    /// <summary>
+    /// Gets the value.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task containing the result of the operation.</returns>
     ValueTask<HttpClient> Get(CancellationToken cancellationToken = default);
 }
