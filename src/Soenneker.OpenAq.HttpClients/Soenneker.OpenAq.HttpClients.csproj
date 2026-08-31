@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Description>A thread-safe singleton HttpClient for OpenAq's OpenAPI integration.</Description>
+        <Description>Provides a cached HttpClient configured for OpenAQ's API, including API-key authentication.</Description>
         <Version Condition="'$(BUILD_VERSION)' == ''">4.0.0</Version>
         <Version Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
         <AssemblyName>Soenneker.OpenAq.HttpClients</AssemblyName>

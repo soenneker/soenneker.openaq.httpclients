@@ -11,11 +11,11 @@ using Soenneker.Utils.HttpClientCache.Abstract;
 
 namespace Soenneker.OpenAq.HttpClients;
 
-///<inheritdoc cref="IOpenAqOpenApiHttpClient"/>
 public sealed class OpenAqOpenApiHttpClient : IOpenAqOpenApiHttpClient
 {
     private readonly IHttpClientCache _httpClientCache;
     private readonly IConfiguration _config;
+    private readonly string _clientId = $"{nameof(OpenAqOpenApiHttpClient)}:{Guid.NewGuid():N}";
 
     private const string _prodBaseUrl = "https://api.openaq.org/";
 
@@ -27,10 +27,10 @@ public sealed class OpenAqOpenApiHttpClient : IOpenAqOpenApiHttpClient
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(nameof(OpenAqOpenApiHttpClient), (config: _config, baseUrl: _config["OpenAq:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
+        return _httpClientCache.Get(_clientId, (config: _config, baseUrl: _config["OpenAq:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
         {
             var apiKey = state.config.GetValueStrict<string>("OpenAq:ApiKey");
-            string authHeaderName = state.config["OpenAq:AuthHeaderName"] ?? "Bearer {token}";
+            string authHeaderName = state.config["OpenAq:AuthHeaderName"] ?? "X-API-Key";
             string authHeaderValueTemplate = state.config["OpenAq:AuthHeaderValueTemplate"] ?? "{token}";
             string authHeaderValue = authHeaderValueTemplate.Replace("{token}", apiKey, StringComparison.Ordinal);
 
@@ -45,20 +45,13 @@ public sealed class OpenAqOpenApiHttpClient : IOpenAqOpenApiHttpClient
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Releases resources used by the current instance.
-    /// </summary>
     public void Dispose()
     {
-        _httpClientCache.RemoveSync(nameof(OpenAqOpenApiHttpClient));
+        _httpClientCache.RemoveSync(_clientId);
     }
 
-    /// <summary>
-    /// Asynchronously releases resources used by the current instance.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
-        return _httpClientCache.Remove(nameof(OpenAqOpenApiHttpClient));
+        return _httpClientCache.Remove(_clientId);
     }
 }
