@@ -11,6 +11,7 @@ using Soenneker.Utils.HttpClientCache.Abstract;
 
 namespace Soenneker.OpenAq.HttpClients;
 
+/// <inheritdoc cref="IOpenAqOpenApiHttpClient" />
 public sealed class OpenAqOpenApiHttpClient : IOpenAqOpenApiHttpClient
 {
     private readonly IHttpClientCache _httpClientCache;
