@@ -30,7 +30,7 @@ public sealed class OpenAqOpenApiHttpClient : IOpenAqOpenApiHttpClient
     {
         return _httpClientCache.Get(_clientId, (config: _config, baseUrl: _config["OpenAq:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
         {
-            var apiKey = state.config.GetValueStrict<string>("OpenAq:ApiKey");
+            var apiKey = state.config.GetStringStrict("OpenAq:ApiKey");
             string authHeaderName = state.config["OpenAq:AuthHeaderName"] ?? "X-API-Key";
             string authHeaderValueTemplate = state.config["OpenAq:AuthHeaderValueTemplate"] ?? "{token}";
             string authHeaderValue = authHeaderValueTemplate.Replace("{token}", apiKey, StringComparison.Ordinal);
